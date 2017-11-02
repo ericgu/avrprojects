@@ -1,0 +1,262 @@
+/*****************************************************
+This program was produced by the
+CodeWizardAVR V2.04.5b Standard
+Automatic Program Generator
+© Copyright 1998-2009 Pavel Haiduc, HP InfoTech s.r.l.
+http://www.hpinfotech.com
+
+Project : 
+Version : 
+Date    : 11/24/2010
+Author  : Eric
+Company : 
+Comments: 
+
+
+Chip type               : ATmega8515L
+Program type            : Application
+AVR Core Clock frequency: 8.000000 MHz
+Memory model            : Small
+External RAM size       : 0
+Data Stack size         : 128
+*****************************************************/
+
+#include <mega8515.h>
+
+#define FRAME0 0
+#define FRAME1 1
+#define FRAME2 2
+#define FRAME3 3
+#define FRAME4 4
+#define FRAME5 5
+#define FRAME6 6
+#define FRAME7 7
+#define SNOWBOTTOM 8
+#define SNOWMIDDLE 9
+#define SNOWTOP 10
+#define HAT 11
+#define EYELEFT 12
+#define EYERIGHT 13
+#define NOSE 14
+#define MOUTH 15
+
+char g_waitCount;          // number of cycles to stay with this state
+
+char g_nextValue[16];       // next state of the lights
+char g_nextWaitCount;      // count for the next state 
+
+#define GetChannelValue(i) ((g_nextValue[i] != 0) ? 1 : 0)
+
+int value = 0;
+
+void CopyToOutput(void)
+{
+return;
+    PORTA.0 = GetChannelValue(0);
+    PORTA.1 = GetChannelValue(1);
+    PORTA.2 = GetChannelValue(2);
+    PORTA.3 = GetChannelValue(3);
+    PORTA.4 = GetChannelValue(4);
+    PORTA.5 = GetChannelValue(5);
+    PORTA.6 = GetChannelValue(6);
+    PORTA.7 = GetChannelValue(7);
+
+    PORTC.0 = GetChannelValue(8);
+    PORTC.1 = GetChannelValue(9);
+    PORTC.2 = GetChannelValue(10);
+    PORTC.3 = GetChannelValue(11);
+    PORTC.4 = GetChannelValue(12);
+    PORTC.5 = GetChannelValue(13);
+    PORTC.6 = GetChannelValue(14);
+    PORTC.7 = GetChannelValue(15);
+}
+
+// Timer 0 overflow interrupt service routine
+// This runs at approximately 60 Hz
+
+interrupt [TIM0_OVF] void timer0_ovf_isr(void)
+{
+    // Reinitialize Timer 0 value
+    TCNT0=0x7D;
+
+    // if the wait is over, we copy the new values over and reset the wait count.
+    if (g_waitCount == 0)
+    {
+        CopyToOutput();
+
+            // Get the wait count. The main thread is waiting for g_nextWaitCount to be set to zero, so
+            // clearing it here will unblock the thread to figure out the next step in the animation...        
+        g_waitCount = g_nextWaitCount;
+        g_nextWaitCount = 0;         
+    }
+    else
+    {
+        g_waitCount--;
+    } 
+}
+
+void SpinWait()
+{
+    while (g_nextWaitCount != 0)
+    {
+    }
+}
+
+void SpinWaitClearAndPause(char pauseCount)
+{
+    char i;
+    
+    SpinWait();
+    for (i = 0; i < 15; i++)
+    {
+        g_nextValue[i] = 0;
+    }
+    g_nextWaitCount = pauseCount;
+}
+
+
+void init(void);
+
+// Declare your global variables here
+
+
+void Juggle(char wait)
+{
+    int iteration = 0;
+    int current = 7;
+                   
+    while (iteration < 80)
+    {
+        SpinWait();
+        g_nextValue[current] = 0;
+        current = (current + 1) % 8;
+        g_nextValue[current] = 1;            
+        g_nextWaitCount = wait;  
+    
+        iteration++;
+    }
+    
+    SpinWaitClearAndPause(wait);
+}
+
+void Sequence()
+{
+    int last = 15;      
+    int i;
+    g_nextValue[15] = 1;
+    
+    for (i = 0; i < 16; i++)
+    {
+        g_nextValue[last] = 0;
+        g_nextValue[i] = 1;
+        
+        last = (last + 1) % 16;
+        g_nextWaitCount = 30;
+        SpinWait();    
+    }
+    
+    SpinWaitClearAndPause(30);
+}
+
+
+void main(void)
+{
+int i = 0;
+long int j = 0;
+// Declare your local variables here
+
+init();
+
+
+// Global enable interrupts
+#asm("sei")
+
+while (1)
+      {  
+        Sequence();
+        //Juggle(10);
+      };
+
+
+}
+
+void init(void)
+{
+// Input/Output Ports initialization
+// Port A initialization
+// Func7=Out Func6=Out Func5=Out Func4=Out Func3=Out Func2=Out Func1=Out Func0=Out 
+// State7=0 State6=0 State5=0 State4=0 State3=0 State2=0 State1=0 State0=0 
+PORTA=0x00;
+DDRA=0xFF;
+
+// Port B initialization
+// Func7=In Func6=In Func5=In Func4=In Func3=In Func2=In Func1=In Func0=In 
+// State7=T State6=T State5=T State4=T State3=T State2=T State1=T State0=T 
+PORTB=0x00;
+DDRB=0x00;
+
+// Port C initialization
+// Func7=Out Func6=Out Func5=Out Func4=Out Func3=Out Func2=Out Func1=Out Func0=Out 
+// State7=0 State6=0 State5=0 State4=0 State3=0 State2=0 State1=0 State0=0 
+PORTC=0x00;
+DDRC=0xFF;
+
+// Port D initialization
+// Func7=In Func6=In Func5=In Func4=In Func3=In Func2=In Func1=In Func0=In 
+// State7=T State6=T State5=T State4=T State3=T State2=T State1=T State0=T 
+PORTD=0x00;
+DDRD=0x00;
+
+// Port E initialization
+// Func2=In Func1=In Func0=In 
+// State2=T State1=T State0=T 
+PORTE=0x00;
+DDRE=0x00;
+
+// Timer/Counter 0 initialization
+// Clock source: System Clock
+// Clock value: 7.813 kHz
+// Mode: Normal top=FFh
+// OC0 output: Disconnected
+TCCR0=0x05;
+TCNT0=0x7D;
+OCR0=0x00;
+
+// Timer/Counter 1 initialization
+// Clock source: System Clock
+// Clock value: Timer1 Stopped
+// Mode: Normal top=FFFFh
+// OC1A output: Discon.
+// OC1B output: Discon.
+// Noise Canceler: Off
+// Input Capture on Falling Edge
+// Timer1 Overflow Interrupt: Off
+// Input Capture Interrupt: Off
+// Compare A Match Interrupt: Off
+// Compare B Match Interrupt: Off
+TCCR1A=0x00;
+TCCR1B=0x00;
+TCNT1H=0x00;
+TCNT1L=0x00;
+ICR1H=0x00;
+ICR1L=0x00;
+OCR1AH=0x00;
+OCR1AL=0x00;
+OCR1BH=0x00;
+OCR1BL=0x00;
+
+// External Interrupt(s) initialization
+// INT0: Off
+// INT1: Off
+// INT2: Off
+MCUCR=0x00;
+EMCUCR=0x00;
+
+// Timer(s)/Counter(s) Interrupt(s) initialization
+TIMSK=0x02;
+
+// Analog Comparator initialization
+// Analog Comparator: Off
+// Analog Comparator Input Capture by Timer/Counter 1: Off
+ACSR=0x80;
+}

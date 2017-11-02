@@ -1,0 +1,4 @@
+main DSTACK_USAGE:0 DSTACK_LEVEL:0 FILE:"Landscape.c" LINE:6
+usart_rx_isr DSTACK_USAGE:14 DSTACK_LEVEL:14 FILE:"SerialHandler.c" LINE:90
+HandleChar DSTACK_USAGE:1 DSTACK_LEVEL:15 FILE:"SerialHandler.c" LINE:39
+putchar DSTACK_USAGE:1 DSTACK_LEVEL:16 FILE:"D:\cvavr\lib\stdio.lib" LINE:202

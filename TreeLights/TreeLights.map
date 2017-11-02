@@ -1,0 +1,16 @@
+CodeVisionAVR C Compiler V1.25.7a Standard
+(C) Copyright 1998-2007 Pavel Haiduc, HP InfoTech s.r.l.
+http://www.hpinfotech.com
+
+File: D:\My Documents\PROJECT\avr\TreeLights\TreeLights.c
+Global variables memory map:
+
+Variable                          Address   Size
+g_timerDelayIndex                                                       R3      1
+g_slowdownCounter                                                       R2      1
+g_count                                                                 R5      1
+g_currentValue                                                         92h     15
+g_deltaValue                                                           A1h     15
+g_deltaCount                                                            R4      1
+g_deltaValueNext                                                       B0h     15
+g_deltaCountNext                                                        R7      1

@@ -1,0 +1,344 @@
+;#include <tiny2313.h>
+;PCODE: $00000000 VOL: 0
+	#ifndef __SLEEP_DEFINED__
+;PCODE: $00000001 VOL: 0
+	#define __SLEEP_DEFINED__
+;PCODE: $00000002 VOL: 0
+	.EQU __se_bit=0x20
+;PCODE: $00000003 VOL: 0
+	.EQU __sm_mask=0x50
+;PCODE: $00000004 VOL: 0
+	.EQU __sm_powerdown=0x10
+;PCODE: $00000005 VOL: 0
+	.EQU __sm_standby=0x40
+;PCODE: $00000006 VOL: 0
+	.SET power_ctrl_reg=mcucr
+;PCODE: $00000007 VOL: 0
+	#endif
+;PCODE: $00000008 VOL: 0
+;PCODE: $00000009 VOL: 0
+;#include <delay.h>
+;#include <stdio.h>
+;#include "project.h"
+;
+;// Tick time is 1/10th of a second (100 mSec).
+;// Two hour timeout
+;
+;//#define TIMEOUT_IN_TICKS (10*34)
+;#define TIMEOUT_IN_TICKS (10 * 60 * 60 * 2)
+;
+;static long int timeRemainingTicks = 0;   // time before lights go off
+;static char outputState = 0;
+;static char outputStateLast = 0;
+;static char ticks = 0;
+;
+;#define ALLOFF PIND.2
+;#define ALLON PIND.3
+;#define ON1 PIND.4
+;#define ON2 PIND.5
+;#define ON3 PIND.6
+;#define STATUS PORTB.7
+;
+;void TurnOn(void)
+; 0003 0019 {
+
+	.CSEG
+;PCODE: $0000000A VOL: 0
+;PCODE: $0000000B VOL: 0
+; 0003 001A     timeRemainingTicks = TIMEOUT_IN_TICKS;
+;PCODE: $0000000C VOL: 0
+;PCODE: $0000000D VOL: 0
+; 0003 001B }
+;PCODE: $0000000E VOL: 0
+;PCODE: $0000000F VOL: 0
+;
+;void AllOff(void)
+; 0003 001E {
+;PCODE: $00000010 VOL: 0
+;PCODE: $00000011 VOL: 0
+; 0003 001F     outputState = 0;
+;PCODE: $00000012 VOL: 0
+;PCODE: $00000013 VOL: 0
+; 0003 0020     timeRemainingTicks = 0;
+;PCODE: $00000014 VOL: 0
+;PCODE: $00000015 VOL: 0
+; 0003 0021 }
+;PCODE: $00000016 VOL: 0
+;PCODE: $00000017 VOL: 0
+;
+;void AllOn(void)
+; 0003 0024 {
+;PCODE: $00000018 VOL: 0
+;PCODE: $00000019 VOL: 0
+; 0003 0025     outputState = 30;
+;PCODE: $0000001A VOL: 0
+;PCODE: $0000001B VOL: 0
+; 0003 0026     TurnOn();
+;PCODE: $0000001C VOL: 0
+; 0003 0027 }
+;PCODE: $0000001D VOL: 0
+;PCODE: $0000001E VOL: 0
+;
+;
+;void HandleButtons()
+; 0003 002B {
+;PCODE: $0000001F VOL: 0
+;PCODE: $00000020 VOL: 0
+; 0003 002C     if (ALLOFF == 0)
+;PCODE: $00000021 VOL: 0
+;PCODE: $00000022 VOL: 0
+;PCODE: $00000023 VOL: 0
+; 0003 002D     {
+; 0003 002E         AllOff();
+;PCODE: $00000024 VOL: 0
+; 0003 002F     }
+; 0003 0030     else if (ALLON == 0)
+;PCODE: $00000025 VOL: 0
+;PCODE: $00000026 VOL: 0
+;PCODE: $00000027 VOL: 0
+;PCODE: $00000028 VOL: 0
+;PCODE: $00000029 VOL: 0
+; 0003 0031     {
+; 0003 0032         AllOn();
+;PCODE: $0000002A VOL: 0
+; 0003 0033     }
+; 0003 0034     else if (ON1 == 0)
+;PCODE: $0000002B VOL: 0
+;PCODE: $0000002C VOL: 0
+;PCODE: $0000002D VOL: 0
+;PCODE: $0000002E VOL: 0
+;PCODE: $0000002F VOL: 0
+; 0003 0035     {
+; 0003 0036         outputState |= 1 << 1;
+;PCODE: $00000030 VOL: 0
+;PCODE: $00000031 VOL: 0
+;PCODE: $00000032 VOL: 0
+; 0003 0037         TurnOn();
+;PCODE: $00000033 VOL: 0
+; 0003 0038     }
+; 0003 0039     else if (ON2 == 0)
+;PCODE: $00000034 VOL: 0
+;PCODE: $00000035 VOL: 0
+;PCODE: $00000036 VOL: 0
+;PCODE: $00000037 VOL: 0
+;PCODE: $00000038 VOL: 0
+; 0003 003A     {
+; 0003 003B         outputState |= 1 << 2;
+;PCODE: $00000039 VOL: 0
+;PCODE: $0000003A VOL: 0
+;PCODE: $0000003B VOL: 0
+; 0003 003C         TurnOn();
+;PCODE: $0000003C VOL: 0
+; 0003 003D     }
+; 0003 003E     else if (ON3 == 0)
+;PCODE: $0000003D VOL: 0
+;PCODE: $0000003E VOL: 0
+;PCODE: $0000003F VOL: 0
+;PCODE: $00000040 VOL: 0
+;PCODE: $00000041 VOL: 0
+; 0003 003F     {
+; 0003 0040         outputState |= 1 << 3;
+;PCODE: $00000042 VOL: 0
+;PCODE: $00000043 VOL: 0
+;PCODE: $00000044 VOL: 0
+; 0003 0041         TurnOn();
+;PCODE: $00000045 VOL: 0
+; 0003 0042     }
+; 0003 0043 }
+;PCODE: $00000046 VOL: 0
+;PCODE: $00000047 VOL: 0
+;PCODE: $00000048 VOL: 0
+;PCODE: $00000049 VOL: 0
+;PCODE: $0000004A VOL: 0
+;PCODE: $0000004B VOL: 0
+;PCODE: $0000004C VOL: 0
+;
+;void SendString(char flash *string)
+; 0003 0046 {
+;PCODE: $0000004D VOL: 0
+;PCODE: $0000004E VOL: 0
+; 0003 0047     while (*string != 0)
+;	*string -> Y+0
+;PCODE: $0000004F VOL: 0
+;PCODE: $00000050 VOL: 0
+;PCODE: $00000051 VOL: 0
+;PCODE: $00000052 VOL: 0
+;PCODE: $00000053 VOL: 0
+; 0003 0048     {
+; 0003 0049         putchar(*string);
+;PCODE: $00000054 VOL: 0
+;PCODE: $00000055 VOL: 0
+;PCODE: $00000056 VOL: 0
+;PCODE: $00000057 VOL: 0
+; 0003 004A         string++;
+;PCODE: $00000058 VOL: 0
+;PCODE: $00000059 VOL: 0
+;PCODE: $0000005A VOL: 0
+; 0003 004B     }
+;PCODE: $0000005B VOL: 0
+;PCODE: $0000005C VOL: 0
+; 0003 004C }
+;PCODE: $0000005D VOL: 0
+;PCODE: $0000005E VOL: 0
+;PCODE: $0000005F VOL: 0
+;
+;void SendOutputState()
+; 0003 004F {
+;PCODE: $00000060 VOL: 0
+;PCODE: $00000061 VOL: 0
+; 0003 0050     if (outputState == 0)
+;PCODE: $00000062 VOL: 0
+;PCODE: $00000063 VOL: 0
+;PCODE: $00000064 VOL: 0
+; 0003 0051     {
+; 0003 0052         SendString("EG0\r");
+;PCODE: $00000065 VOL: 0
+;PCODE: $00000066 VOL: 0
+;PCODE: $00000067 VOL: 0
+;PCODE: $00000068 VOL: 0
+; 0003 0053     }
+; 0003 0054     else
+;PCODE: $00000069 VOL: 0
+;PCODE: $0000006A VOL: 0
+; 0003 0055     {
+; 0003 0056         SendString("EG1\r");
+;PCODE: $0000006B VOL: 0
+;PCODE: $0000006C VOL: 0
+;PCODE: $0000006D VOL: 0
+;PCODE: $0000006E VOL: 0
+; 0003 0057     }
+;PCODE: $0000006F VOL: 0
+; 0003 0058 }
+;PCODE: $00000070 VOL: 0
+;PCODE: $00000071 VOL: 0
+;
+;// Timer1 overflow interrupt service routine
+;interrupt [TIM1_OVF] void timer1_ovf_isr(void)
+; 0003 005C {
+;PCODE: $00000072 VOL: 0
+;PCODE: $00000073 VOL: 0
+; 0003 005D         // Reinitialize Timer1 value
+; 0003 005E     TCNT1H=TCNT1H_VALUE;
+;PCODE: $00000074 VOL: 0
+;PCODE: $00000075 VOL: 0
+; 0003 005F     TCNT1L=TCNT1L_VALUE;
+;PCODE: $00000076 VOL: 0
+;PCODE: $00000077 VOL: 0
+; 0003 0060 
+; 0003 0061     HandleButtons();
+;PCODE: $00000078 VOL: 0
+; 0003 0062 
+; 0003 0063     if (timeRemainingTicks > 0)
+;PCODE: $00000079 VOL: 0
+;PCODE: $0000007A VOL: 0
+;PCODE: $0000007B VOL: 0
+; 0003 0064     {
+; 0003 0065         if ((timeRemainingTicks % 600 == 0) &&
+; 0003 0066             (timeRemainingTicks <= 3000))
+;PCODE: $0000007C VOL: 0
+;PCODE: $0000007D VOL: 0
+;PCODE: $0000007E VOL: 0
+;PCODE: $0000007F VOL: 0
+;PCODE: $00000080 VOL: 0
+;PCODE: $00000081 VOL: 0
+;PCODE: $00000082 VOL: 0
+;PCODE: $00000083 VOL: 0
+;PCODE: $00000084 VOL: 0
+;PCODE: $00000085 VOL: 0
+;PCODE: $00000086 VOL: 0
+;PCODE: $00000087 VOL: 0
+; 0003 0067         {
+; 0003 0068             PORTB = 0;
+;PCODE: $00000088 VOL: 0
+;PCODE: $00000089 VOL: 0
+; 0003 0069         }
+; 0003 006A         else
+;PCODE: $0000008A VOL: 0
+;PCODE: $0000008B VOL: 0
+; 0003 006B         {
+; 0003 006C             PORTB = outputState;
+;PCODE: $0000008C VOL: 0
+;PCODE: $0000008D VOL: 0
+; 0003 006D         }
+;PCODE: $0000008E VOL: 0
+; 0003 006E         timeRemainingTicks--;
+;PCODE: $0000008F VOL: 0
+;PCODE: $00000090 VOL: 0
+;PCODE: $00000091 VOL: 0
+;PCODE: $00000092 VOL: 0
+; 0003 006F     }
+; 0003 0070     else
+;PCODE: $00000093 VOL: 0
+;PCODE: $00000094 VOL: 0
+; 0003 0071     {
+; 0003 0072         outputState = 0;
+;PCODE: $00000095 VOL: 0
+;PCODE: $00000096 VOL: 0
+; 0003 0073         PORTB = 0;
+;PCODE: $00000097 VOL: 0
+;PCODE: $00000098 VOL: 0
+; 0003 0074     }
+;PCODE: $00000099 VOL: 0
+; 0003 0075 
+; 0003 0076     ticks++;
+;PCODE: $0000009A VOL: 0
+;PCODE: $0000009B VOL: 0
+;PCODE: $0000009C VOL: 0
+; 0003 0077     if (outputState != outputStateLast || ticks == 10)
+;PCODE: $0000009D VOL: 0
+;PCODE: $0000009E VOL: 0
+;PCODE: $0000009F VOL: 0
+;PCODE: $000000A0 VOL: 0
+;PCODE: $000000A1 VOL: 0
+;PCODE: $000000A2 VOL: 0
+;PCODE: $000000A3 VOL: 0
+;PCODE: $000000A4 VOL: 0
+;PCODE: $000000A5 VOL: 0
+; 0003 0078     {
+; 0003 0079         SendOutputState();
+;PCODE: $000000A6 VOL: 0
+; 0003 007A         outputStateLast = outputState;
+;PCODE: $000000A7 VOL: 0
+;PCODE: $000000A8 VOL: 0
+; 0003 007B     }
+; 0003 007C 
+; 0003 007D     if (ticks == 10)
+;PCODE: $000000A9 VOL: 0
+;PCODE: $000000AA VOL: 0
+;PCODE: $000000AB VOL: 0
+;PCODE: $000000AC VOL: 0
+; 0003 007E     {
+; 0003 007F         ticks = 0;
+;PCODE: $000000AD VOL: 0
+;PCODE: $000000AE VOL: 0
+; 0003 0080         if (outputState != 0 && timeRemainingTicks > 0)
+;PCODE: $000000AF VOL: 0
+;PCODE: $000000B0 VOL: 0
+;PCODE: $000000B1 VOL: 0
+;PCODE: $000000B2 VOL: 0
+;PCODE: $000000B3 VOL: 0
+;PCODE: $000000B4 VOL: 0
+;PCODE: $000000B5 VOL: 0
+;PCODE: $000000B6 VOL: 0
+;PCODE: $000000B7 VOL: 0
+;PCODE: $000000B8 VOL: 0
+; 0003 0081         {
+; 0003 0082             STATUS = 1;
+;PCODE: $000000B9 VOL: 0
+;PCODE: $000000BA VOL: 0
+; 0003 0083         }
+; 0003 0084     }
+;PCODE: $000000BB VOL: 0
+; 0003 0085     else
+;PCODE: $000000BC VOL: 0
+;PCODE: $000000BD VOL: 0
+; 0003 0086     {
+; 0003 0087         STATUS = 0;
+;PCODE: $000000BE VOL: 0
+;PCODE: $000000BF VOL: 0
+; 0003 0088     }
+;PCODE: $000000C0 VOL: 0
+; 0003 0089 }
+;PCODE: $000000C1 VOL: 0
+;PCODE: $000000C2 VOL: 0
+;PCODE: $000000C3 VOL: 0

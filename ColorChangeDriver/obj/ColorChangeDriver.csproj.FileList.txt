@@ -1,0 +1,5 @@
+bin\Debug\ColorChangeDriver.exe
+bin\Debug\ColorChangeDriver.pdb
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\ColorChangeDriver.exe
+obj\Debug\ColorChangeDriver.pdb

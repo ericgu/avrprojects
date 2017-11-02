@@ -1,0 +1,19 @@
+RAM Allocation
+Variable                                                          Address   Size
+--------------------------------------------------------------------------------
+rx_buffer                                                         0160h        8
+
+EEPROM Allocation
+Variable                                                          Address   Size
+--------------------------------------------------------------------------------
+
+Register Allocation
+Variable                                                          Register  Size
+--------------------------------------------------------------------------------
+rx_wr_index                                                       R5           1
+rx_rd_index                                                       R4           1
+rx_counter                                                        R7           1
+command                                                           R6           1
+command_ready                                                     R9           1
+state                                                             R8           1
+rx_buffer_overflow                                                R2.0      1bit

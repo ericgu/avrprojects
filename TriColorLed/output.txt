@@ -1,0 +1,2 @@
+
+Can not both program/verify AND read FLASH

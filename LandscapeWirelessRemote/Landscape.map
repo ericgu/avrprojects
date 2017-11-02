@@ -1,0 +1,22 @@
+RAM Allocation
+Variable                                                          Address   Size
+--------------------------------------------------------------------------------
+command                                                           0080h        1
+command_ready                                                     0081h        1
+rx_buffer                                                         0082h        8
+timeRemainingTenths                                               008Ah        2
+outputState                                                       008Ch        1
+tenths                                                            008Dh        1
+
+EEPROM Allocation
+Variable                                                          Address   Size
+--------------------------------------------------------------------------------
+
+Register Allocation
+Variable                                                          Register  Size
+--------------------------------------------------------------------------------
+rx_wr_index                                                       R3           1
+rx_rd_index                                                       R2           1
+rx_counter                                                        R5           1
+state                                                             R4           1
+rx_buffer_overflow                                                GPIOR0.0  1bit

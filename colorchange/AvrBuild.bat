@@ -1,0 +1,2 @@
+@ECHO OFF
+"d:\Program Files\Atmel\AVR Tools\AvrAssembler2\avrasm2.exe" -S "D:\My Documents\PROJECT\avr\ColorChange\labels.tmp" -fI -W+ie -o "D:\My Documents\PROJECT\avr\ColorChange\ColorChange.hex" -d "D:\My Documents\PROJECT\avr\ColorChange\ColorChange.obj" -e "D:\My Documents\PROJECT\avr\ColorChange\ColorChange.eep" -m "D:\My Documents\PROJECT\avr\ColorChange\ColorChange.map" "D:\My Documents\PROJECT\avr\ColorChange\ColorChange.asm"

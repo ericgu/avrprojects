@@ -1,0 +1,6 @@
+VERSION:3 SOURCE_TIMESTAMP:3C3F852B
+NODE:I LEVEL:0 LINE:1 "D:\cvavr\inc\tiny2313.h"
+NODE:I LEVEL:0 LINE:2 "D:\cvavr\inc\delay.h"
+NODE:I LEVEL:0 LINE:3 "D:\cvavr\inc\stdio.h"
+NODE:I LEVEL:0 LINE:4 "D:\AvrProjects\LandscapeWirelessRemote\project.h"
+NODE:F LEVEL:0 LINE:6 "main(void)"

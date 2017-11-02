@@ -1,0 +1,35 @@
+
+_DIM_LEVELS:
+	.DB  0x20,0x0
+_LEVELS_TO_SKIP:
+	.DB  0x4,0x0
+	.DEF _g_timerDelayIndex=R3
+_SLOWDOWN_FACTOR:
+	.DB  0xA
+	.DEF _g_slowdownCounter=R2
+	.DEF _g_count=R5
+	.DEF _g_deltaCount=R4
+	.DEF _g_deltaCountNext=R7
+_3:
+	.DB  0xFF
+_0x52:
+	.DB  0x3,0x7
+	.DB  0x2,0x5
+	.DB  0x6,0x9
+	.DB  0x4,0x8
+	.DB  0x1,0xC
+	.DB  0xA,0xB
+	.DB  0xD,0xE
+
+;GPIOR0-GPIOR2 INITIALIZATION
+	.EQU  __GPIOR0_INIT=0x00
+	.EQU  __GPIOR1_INIT=0x00
+	.EQU  __GPIOR2_INIT=0x00
+
+__GLOBAL_INI_TBL:
+	.DW  0x01
+	.DW  0x07
+	.DW  _3*2
+
+	.DW  0
+_0x78:

@@ -1,0 +1,15 @@
+RAM Allocation
+Variable                                                          Address   Size
+--------------------------------------------------------------------------------
+g_nextValue                                                       00E0h       16
+
+EEPROM Allocation
+Variable                                                          Address   Size
+--------------------------------------------------------------------------------
+
+Register Allocation
+Variable                                                          Register  Size
+--------------------------------------------------------------------------------
+g_waitCount                                                       R5           1
+g_nextWaitCount                                                   R4           1
+value                                                             R6,R7        2
